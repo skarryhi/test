@@ -128,11 +128,25 @@ LoginButtonTextType.filling  // "Заполнить со Сбер ID"
 LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 ```
 
-Вариа
+Степень скругления кнопки можно установить с помощью метода:
+```swift
+func setCornerRadius(_ radiusStyle: CornerRadiusStyle)
+CornerRadiusStyle.no // отсутствует
+CornerRadiusStyle.normal // радиус 4
+CornerRadiusStyle.max // радиус равен половине высоты кнопки
+```
+*при необходимости можно установить свои параметры через ```SBKLoginButton().layer.cornerRadius```
+
+Установить цвет обводки кнопки Sber ID (используется для белого стиля кнопки), поможет метод:
+```swift
+func setBorderColor(_ color: UIColor)
+```
 
 ## Запуск процесса авторизации по Сбер ID <a name="Запуск"></a> 
 
-- Для успешного запроса авторизации создаем и заполняем объект ```SBKAuthRequest``` параметрами. Их описание можно найти в [1.1.2.1. Параметры запроса](https://api.developer.sber.ru/product/SberbankID/doc/v1/reqmobile).
+Для успешного запроса авторизации создаем и заполняем объект ```SBKAuthRequest``` параметрами. Их описание можно найти в [1.1.2.1. Параметры запроса](https://api.developer.sber.ru/product/SberbankID/doc/v1/reqmobile).
+
+Методы ```auth``` и ```soleLoginWebPageAuth``` создадут уникальную ссылку и откроют мобильное приложение Сбербанк Онлайн (при наличии) либо веб окно для авторизации:
 
 **Swift**
 ```swift
@@ -185,23 +199,19 @@ UIViewController *loginViewController = [UIViewController new];
                                  svcRedirectUrlString:@"URL для возврата в приложение" 
                                        viewController:yourLoginViewController]; // Авторизация с помощью веб окна.
 ```
+*в версиях до 1.3.1 открывается внешний браузер Safari - на данный момент это запрещено Apple.
 
-Данный метод создаст уникальную ссылку и, при наличии на устройстве, откроет мобильное приложение Сбербанк Онлайн для авторизации.
-Для поддержки случая когда приложения Сбербанк Онлайн не может быть запущено(UIApplication.shared.canOpenURL для URI приложения Сбербанк Онлайн возвращает false)
-необходимо передать в свойство SBKAuthManager.navigationController объект типа UINavigationController, через который будет открыт SafariViewController c web страницей входа по Сбер ID. 
-* в версиях до 1.3.1 открывается внешний браузер Safari - на данный момент это запрещено Apple.
-
+*в версиях до 2.0.0 возможна установка свойства ```SBKAuthManager.navigationController```, через который будет открыт SafariViewController c web страницей, если приложение Сбербанк Онлайн не может быть запущено (```UIApplication.shared.canOpenURL``` для Сбербанк Онлайн возвращает ```false```)
 
 ## Обработка ответа после авторизации <a name="Обработка"></a> 
 
-После авторизации Сбербанк Онлайн перенаправит вас обратно в ваше приложение по адресу, указанному в параметре **redirectUri** объекта **request**. Для того чтобы при переходе открылось ваше приложение необходимо зарегистрировать этот адрес (deeplink).
+После авторизации Сбербанк Онлайн перенаправит вас обратно в ваше приложение по адресу, указанному в параметре ```redirectUri``` объекта ```SBKAuthRequest```. Для того чтобы при переходе открылось ваше приложение, необходимо зарегистрировать deeplink(адрес) вышего приложения.
 
-- Откройте параметры проекта и перейдите на вкладку **Info**. В нижней части добавьте свой **URL Type**.
+Откройте параметры проекта и перейдите на вкладку *Info*. В нижней части добавьте свой *URL Type*.
 
+<img src="ReadMeImages/Screenshot 2022-08-29 at 15.39.31.png" height="300">
 
-![Скриншот проекта](ReadMeImages/SKD6.png ':size=600')
-
-Для того чтобы ваше приложение могло проверить возможность запуска приложения Сбербанк Онлайн в Info.plist необходимо добавить следующий параметр
+Для того чтобы ваше приложение могло проверить возможность запуска приложения Сбербанк Онлайн в *Info.plist* необходимо добавить следующий параметр
 
 ```xml
 <key>LSApplicationQueriesSchemes</key>
@@ -212,17 +222,17 @@ UIViewController *loginViewController = [UIViewController new];
 
 ![Скриншот метода](ReadMeImages/image2020-12-9_17-18-49.png ':size=600')
 
-- Далее в файле AppDelegate в методе
+Далее в файле *AppDelegate* в методе
 
 **Swift**
 
-```cpp
+```Swift
 func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool { return true }
 ```
 
 **Objective C**
 
-```cpp
+```objc
 // Для iOS 9+
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options { return YES; }
  
@@ -230,7 +240,7 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url { return YES; }
 ```
 
-- вызвать вспомогательный метод, который вернет объект **response** с полученными параметрами. Этот метод вызывается при открытии вашего приложения по специальной ссылке (deeplink).
+Вызвать вспомогательный метод, который вернет объект ```response``` с полученными параметрами. Этот метод вызывается при открытии вашего приложения по специальной ссылке (deeplink).
 
 **Swift**
 
