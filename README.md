@@ -41,12 +41,12 @@ IOS SDK помогает реализовать получение кода ав
 
 - Отдельно добавьте ```MPAnalyticsDataModel.xcdatamodeld```, этот файл предоставляется в исходном виде и собирается вместе с приложением. Важно убрать галочку с *Copy items if needed*.
 
-<img src="ReadMeImages/image2021-7-23_18-31-47.png" width="550" height="200"> <img src="ReadMeImages/image2021-7-23_18-32-14.png" height="200">
-<img src="ReadMeImages/image2021-7-23_18-33-16.png" height="200"> <img src="ReadMeImages/image2020-12-9_16-55-50.png" height="200">
+<img src="ReadMeImages/addData1.png" width="550" height="200"> <img src="ReadMeImages/addData2.png" height="200">
+<img src="ReadMeImages/addData3.png" height="200"> <img src="ReadMeImages/addData4.png" height="200">
 
 - Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberbankSDK.xcframework```
 
-<img src="ReadMeImages/image2020-12-16_11-57-7.png" width="600">
+<img src="ReadMeImages/oneFramework.png" width="600">
 
 ## Добавление кнопки Sber ID <a name="Добавление"></a> 
 
@@ -194,7 +194,7 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 
 - Для того чтобы ваше приложение могло проверить возможность запуска приложения Сбербанк Онлайн в *Info.plist* необходимо добавить следующий параметр:
 
-<img src="ReadMeImages/image2020-12-9_17-18-49.png" width="600">
+<img src="ReadMeImages/startSBOL.png" width="600">
 
 ```xml
 <key>LSApplicationQueriesSchemes</key>
@@ -262,7 +262,7 @@ UIViewController *loginViewController = [UIViewController new];
 
 Откройте параметры проекта и перейдите во вкладку *Info*. В нижней части добавьте свой *URL Type*.
 
-<img src="ReadMeImages/Screenshot 2022-08-29 at 15.39.31.png" width="800">
+<img src="ReadMeImages/addDeeplink.png" width="800">
 
 
 Далее в файле *AppDelegate* прописываем свою логику (см. пример ниже), метод ```application``` вызывается при открытии вашего приложения по deeplink(ссылке). ```SBKAuthManager.getResponseFrom(_ url: URL, completion: (SBKAuthResponse) -> Void)``` вернет вам объект ```SBKAuthResponse``` с полученными параметрами. 
@@ -461,7 +461,7 @@ UIViewController *loginViewController = [UIViewController new];
 
 Откроется единое веб окно авторизации в SafariViewController с различными способами идентификации входа по Сбер ID:
 
-<img src="ReadMeImages/image2021-7-23_18-18-2.png" height="400">
+<img src="ReadMeImages/controllerVariousWays.png" height="400">
 
 Новый параметр ```svcRedirectUrlString``` используется для передачи «активности» в ваше приложение из ```SafariViewControllera```. После прохождения авторизации на портале и возврата в ваше приложение(по диплинку из ```svcRedirectUrlString```) процесс авторизации продолжит работу по стандартному сценарию OIDC. В ваше приложение вернется ```AuthCode``` и другие параметры через диплинк, переданный в ```SBKAuthRequest().redirectUri```. Вам необходимо закрыть ```SafariViewController``` самостоятельно. Дальнейшие шаги процесса авторизации описаны в разделе [Запуск процесса авторизации по Сбер ID](#Запуск)
 
@@ -472,11 +472,11 @@ UIViewController *loginViewController = [UIViewController new];
 
 ### Стили
 
-<img src="ReadMeImages/buttonsecond.png" height="50"><img src="ReadMeImages/white.png" height="50">
+<img src="ReadMeImages/green.png" height="50"><img src="ReadMeImages/white.png" height="50">
 
 Стиль устанавливается при инициализации кнопки Sber ID:
 
-<img src="ReadMeImages/codd.png" height="100">
+<img src="ReadMeImages/style.png" height="100">
 
 ### Варианты текста (по умолчанию "Войти по Сбер ID")
 
@@ -493,26 +493,26 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 
 Тексты поддерживают английскую локализацию на устройстве. При выборе локализации, отличной от русской и английской, тексты будут на русском.
 
-<img src="ReadMeImages/button.png" height="120"> <img src="ReadMeImages/seven.png" height="120">
+<img src="ReadMeImages/localization.png" height="120"> <img src="ReadMeImages/seven.png" height="120">
 
 *в примере кнопки с текстом "Сбер ID" и “Sber ID” отрисована с минимально допустимой шириной.
 
 ### Степень скругления кнопки (по умолчанию .normal)
 
-<img src="ReadMeImages/buttonsecond.png" height="50">
-<img src="ReadMeImages/buttonnew.png" height="118">
+<img src="ReadMeImages/green.png" height="50">
+<img src="ReadMeImages/radius.png" height="118">
 
 Установить степень скругления кнопки можно с помощью метода кнопки ```setCornerRadius(_ radiusStyle: CornerRadiusStyle)```. При необходимости можно установить свои параметры через стандартный метод ```UIButton``` - ```SBKLoginButton().layer.cornerRadius```.
 
-<img src="ReadMeImages/code.png" height="120">
+<img src="ReadMeImages/corner.png" height="120">
 
 ### Обводка
 
-<img src="ReadMeImages/third.png" height="50">
+<img src="ReadMeImages/border.png" height="50">
 
 В случае установки типа кнопки "white" есть возможность указать значение цвета обводки. Для этого установите конкретный цвет через метод кнопки ```setBorderColor(_ color: UIColor)```.
 
-<img src="ReadMeImages/second.png" height="130">
+<img src="ReadMeImages/setBorder.png" height="130">
 
 ###  Управление статусом загрузки
 
@@ -546,17 +546,17 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 
 При персонализации кнопка выглядит следующим образом:
 
-<img src="ReadMeImages/noname.png" height="70"> <img src="ReadMeImages/eight.png" height="70">
+<img src="ReadMeImages/personalization.png" height="70"> <img src="ReadMeImages/personalizationWight.png" height="70">
 
 Если имя пользователя слишком длинное, чтобы уместиться в кнопке, итоговый текст будет обрезан с правой стороны.
 
-<img src="ReadMeImages/nine.png" height="70">
+<img src="ReadMeImages/personalizationCut.png" height="70">
 
 Для включения возможности персонализации кнопки:
 - ваше приложение должно публиковаться в AppStore от группы разработчика "Сбербанк России"
 - в настройках проекта должен быть включён функционал Keychain Sharing. *targets → <название основного таргета> → Signing&Capabilities*
 
-<img src="ReadMeImages/image2021-3-9_15-44-43.png" height="55">
+<img src="ReadMeImages/keychain.png" height="55">
 
 - в настройках *Keychain Sharing* необходимо добавить *keychain group* c именем ```$(AppIdentifierPrefix)ru.sberbank.onlineiphone.shared```, должен появиться файл с расширением ```.entitlements```(если такового не было), в котором, среди прочих, будет данный блок:
 
@@ -567,11 +567,11 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 	</array>
 ```
 
-<img src="ReadMeImages/image2021-3-9_15-47-29.png" height="100">
+<img src="ReadMeImages/keychainAdd.png" height="100">
 
 - в *info.plist* проекта необходимо добавить пару ключ-параметр, в RunTime он будет заменен на ```TeamId```.
 
-<img src="ReadMeImages/image2021-5-28_18-10-33.png" height="100">
+<img src="ReadMeImages/keychainAddKey.png" height="100">
 
 ```xml
 	<key>AppIdentifierPrefix</key>
