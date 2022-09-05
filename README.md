@@ -200,6 +200,7 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 <key>LSApplicationQueriesSchemes</key>
 <array>
     <string>sberbankidexternallogin</string>
+    <string>sberidexternallogin</string>
 </array>
 ```
 
