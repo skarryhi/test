@@ -493,7 +493,7 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 
 Тексты поддерживают английскую локализацию на устройстве. При выборе локализации, отличной от русской и английской, тексты будут на русском.
 
-<img src="ReadMeImages/localization.png" height="120"> <img src="ReadMeImages/seven.png" height="120">
+<img src="ReadMeImages/localization.png" height="120"> <img src="ReadMeImages/localizationRu.png" height="120">
 
 *в примере кнопки с текстом "Сбер ID" и “Sber ID” отрисована с минимально допустимой шириной.
 
