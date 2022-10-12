@@ -17,6 +17,8 @@ IOS SDK помогает реализовать получение кода ав
 
 [- Обработка ответа после авторизации](#Обработка)
 
+[- Отправка события о старте авторизации с использованием альтернативных сервисов](#АльтернативныеСервисы)
+
 [- Ошибки](#Ошибки)
 
 [- Настройка статической библиотеки](#Статика)
@@ -49,6 +51,8 @@ IOS SDK помогает реализовать получение кода ав
 - Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberbankSDK.xcframework```
 
 <img src="ReadMeImages/oneFramework.png" width="600">
+
+- Начиная с версии 2.1.0 необходимо подключить ```Yandex AppMetrica SDK``` в ваш проект. Подключить ее можно любым из доступных методов, описанных на [странице AppMetrica](https://appmetrica.yandex.ru/docs/mobile-sdk-dg/ios/ios-quickstart.html)
 
 ## Добавление кнопки Sber ID <a name="Добавление"></a> 
 
@@ -136,13 +140,15 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 
 - Если у вас уже выключен функционал дополнительных проверок по установке сетевого соединения с внешними ресурсами, в *Info.plist -> NSAppTransportSecurity -> NSAllowsArbitraryLoads* установлено значение ```true```, пропустите следующий шаг.
 
-- Разрешите подключение приложения только к домену *id.sber.ru*. Добавьте в *Info.plist* следующие параметры:
+- Разрешите подключение приложения к домену *id.sber.ru* и *report.appmetrica.yandex.net*(??????? Проверить работает ли с настройкой выше??????? ): добавьте в *Info.plist* следующие параметры:
 
 ```xml
 <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSExceptionDomains</key>
         <dict>
+        	<key>*.report.appmetrica.yandex.net</key>
+			<true/>
             <key>id.sber.ru</key>
             <dict>
                 <key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -209,7 +215,7 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 <key>LSApplicationQueriesSchemes</key>
 <array>
     <string>sberbankidexternallogin</string>
-    <string>sberidexternallogin</string>
+    <string>sbolidexternallogin</string>
 </array>
 ```
 
@@ -359,6 +365,45 @@ class SBKAuthResponse : NSObject {
 
 @end
 ```
+
+## Отправка события о старте авторизации с использованием альтернативных сервисов <a name="АльтернативныеСервисы"></a> 
+
+Для отправки метрики о событии использования альтернативных сервисов авторизации предусмотренно 2 статических метода метода класса ```SBKAuthManager```: 
+- с предусмотренным перечислением популярных сервисов; 
+- с возможностью указать название самостоятельно.
+
+###### Swift
+```swift
+/// Передать метрики использования сервисов авторизации, отличных от Сбер ID
+/// - Parameters:
+///   - serviceName: название сервиса, который использовал пользователь
+///   - isSuccess: флаг успешности входа
+///   - userStatus: флаг, впервые ли пользователь регистрируется
+@objc public static func sendOtherAuth(serviceName: String, isSuccess: SBKTrinity, userStatus: SBKTrinity)
+
+/// Передать метрики использования сервисов авторизации, отличных от Сбер ID
+/// - Parameters:
+///   - service: сервис, который использовал пользователь
+///   - isSuccess: флаг успешности входа
+///   - isUserNew: флаг, впервые ли пользователь регистрируется
+@objc public static func sendOtherAuth(service: AuthServiceType, isSuccess: SBKTrinity, isUserNew: SBKTrinity)
+
+```
+
+### Предусмотренный перечень популярных сервисов
+
+	- local - ваша внутренняя система авторизации
+	- instagram
+	- gosUslugi
+	- facebook
+	- myMoscow
+	- yandex
+	- google
+	- mailRu
+	- apple
+	- avito
+	- vk
+	- ok
 
 ## Ошибки <a name="Ошибки"></a> 
 
