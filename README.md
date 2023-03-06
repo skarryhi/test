@@ -1,7 +1,7 @@
 
 # Sber ID SDK
 
-IOS SDK помогает реализовать получение кода авторизации (Auth Code) Сбер ID минимальными усилиями со стороны разработчика и в соответствии с утвержденными гайдами по отображению кнопки. Чтобы добавить поддержку Сбер ID в свое приложение, следуйте инструкциям ниже. 
+iOS SDK помогает реализовать получение кода авторизации (Auth Code) Сбер ID минимальными усилиями со стороны разработчика и в соответствии с утвержденными гайдами по отображению кнопки. Чтобы добавить поддержку Сбер ID в свое приложение, следуйте инструкциям ниже. 
 
 Для выполнения успешных запросов вам необходимо зарегистрировать ваше приложение в банке и подписать договор. Заявку можно оставить по [ссылке](https://developers.sber.ru/portal/tools/sber-id)
 
@@ -9,15 +9,17 @@ IOS SDK помогает реализовать получение кода ав
 
 [- Подключение SDK к вашему проекту](#Подключение)
 
-[- Добавление кнопки Sber ID](#Добавление)
-
 [- Настройка SDK](#Настройка)
+
+[- Инициализация SDK при старте приложения](#Инициализация)
+
+[- Добавление кнопки Sber ID](#Добавление)
 
 [- Запуск процесса авторизации по Сбер ID](#Запуск)
 
 [- Обработка ответа после авторизации](#Обработка)
 
-[- Отправка события о старте авторизации с использованием альтернативных сервисов](#АльтернативныеСервисы)
+[- Отправка события о старте авторизации с использованием висов](#АльтернативныеСервисы)
 
 [- Ошибки](#Ошибки)
 
@@ -37,7 +39,7 @@ IOS SDK помогает реализовать получение кода ав
 
 ## Подключение SDK к проекту <a name="Подключение"></a> 
  
-- Перетащите ```SberbankSDK.xcframework``` и ```MPAnalytics.xcframework```* в *Frameworks, Libraries, and Embedded Content*, а также выставите *Embed & Sign* и *Do Not Embed* соответственно.
+- Перетащите ```SberIdSDK.xcframework``` и ```MPAnalytics.xcframework```* в *Frameworks, Libraries, and Embedded Content*, а также выставите *Embed & Sign* и *Do Not Embed* соответственно.
 
 <img src="ReadMeImages/AddFramework.png" width="600">
 
@@ -48,90 +50,11 @@ IOS SDK помогает реализовать получение кода ав
 <img src="ReadMeImages/addData1.png" width="550" height="200"> <img src="ReadMeImages/addData2.png" height="200">
 <img src="ReadMeImages/addData3.png" height="200"> <img src="ReadMeImages/addData4.png" height="200">
 
-- Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberbankSDK.xcframework```
+- Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberIdSDK.xcframework```
 
 <img src="ReadMeImages/oneFramework.png" width="600">
 
 - Начиная с версии 2.1.0 необходимо подключить ```Yandex AppMetrica SDK``` в ваш проект. Подключить ее можно любым из доступных методов, описанных на [странице AppMetrica](https://appmetrica.yandex.ru/docs/mobile-sdk-dg/ios/ios-quickstart.html)
-
-## Добавление кнопки Sber ID <a name="Добавление"></a> 
-
-- Импортируйте модуль SberbankSDK.
-
-###### Swift
-```swift
-import SberbankSDK
-```
-###### Objective C
-```Objective-C
-@import SberbankSDK;
-```
-
-- Создайте кнопку и добавьте её на view.
-
-###### Swift
-```swift
-// Инициализаторы для создания кнопки:
-
-/// Инициализатор создаст кнопку по стилистическому гайду Сбербанка с заданными размерами и выбранным заголовком
-/// - Parameters:
-///   - type: стиль кнопки
-///   - textType: вариант текста
-///   - clientId: идентификатор клиента
-///   - desiredSize: желаемые высота и ширина
-///   - observer: наблюдатель состояния кнопки
-init(type: LoginButtonStyle,
-     textType: LoginButtonTextType,
-     clientId: String,
-     desiredSize: CGSize,
-     observer: LoginButtonObserverProtocol? = nil) {}
-     
-/// Инициализатор создаст кнопку только по выбранному стилю
-/// - Parameters:
-///   - type: стиль кнопки
-///   - clientId: идентификатор клиента
-///   - observer: наблюдатель состояния кнопки
-init(type: LoginButtonStyle,
-     clientId: String,
-     observer: LoginButtonObserverProtocol? = nil) {}
-     
-// Пример:
-let loginButton = SBKLoginButton(type: .white,
-                                 clientId: "clientId")
-loginButton.addTarget(self, action: #selector(loginButtonDidTap(_:)), for: .touchUpInside)
-view.addSubview(loginButton)
-```
-
-###### Objective C
-```Objective-C
-// Инициализаторы для создания кнопки:
-
-/// Инициализатор создаст кнопку по стилистическому гайду Сбербанка с заданными размерами и выбранным заголовком
-/// params:
-///   type: стиль кнопки
-///   textType: вариант текста
-///   clientId: идентификатор клиента
-///   desiredSize: желаемые высота и ширина
-///   observer: наблюдатель состояния кнопки
-- (nonnull instancetype)initWithType:(enum LoginButtonStyle) 
-                            textType:(enum LoginButtonTextType)
-                            clientId:(NSString * _Nonnull)
-                         desiredSize:(CGSize)
-                            observer:(id<LoginButtonObserverProtocol> _Nullable) {}
-
-/// Инициализатор создаст кнопку только по выбранному стилю
-///   type: стиль кнопки
-///   clientId: идентификатор клиента
-///   observer: наблюдатель состояния кнопки
-- (nonnull instancetype)initWithType:(enum LoginButtonStyle)
-                            clientId:(NSString * _Nonnull)
-                            observer:(id<LoginButtonObserverProtocol> _Nullable) {}
-
-// Пример:
-SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonStyleGreen clientId:"clientId" observer:nil];
-[loginButton addTarget:self action:@selector(loginButtonDidTap:) forControlEvents:UIControlEventTouchUpInside];
-[self.view addSubview:loginButton];
-```
 
 ## Настройка SDK <a name="Настройка"></a> 
 
@@ -140,7 +63,7 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 
 - Если у вас уже выключен функционал дополнительных проверок по установке сетевого соединения с внешними ресурсами, в *Info.plist -> NSAppTransportSecurity -> NSAllowsArbitraryLoads* установлено значение ```true```, пропустите следующий шаг.
 
-- Разрешите подключение приложения к домену *id.sber.ru* и *report.appmetrica.yandex.net*(??????? Проверить работает ли с настройкой выше??????? ): добавьте в *Info.plist* следующие параметры:
+- Разрешите подключение приложения к домену *id.sber.ru* и *report.appmetrica.yandex.net*: добавьте в *Info.plist* следующие параметры:
 
 ```xml
 <key>NSAppTransportSecurity</key>
@@ -157,8 +80,6 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
         </dict>
     </dict>
 ```
-
-- Передайте параметр ```clientId``` при инициализации кнопки, равный значению ```clientId``` объекта ```SBKAuthRequest``` (см. [ниже](#ПараметрыЗапроса)).
 
 #### Информирование о выходе новой версии сдк Sber ID (не поддерживается в статической сборке)
 
@@ -182,10 +103,9 @@ class LoginButtonObserver: LoginButtonObserverProtocol {
 }
 
 let sberIdButton = SBKLoginButton(type: .white, 
-				  textType: .short, 
-				  clientId: "clientId", 
-				  desiredSize: CGSize(), 
-				  observer: LoginButtonObserver())
+								  textType: .short, 
+								  desiredSize: CGSize(), 
+								  observer: LoginButtonObserver())
 ```
 
 ###### Objective C
@@ -202,8 +122,7 @@ let sberIdButton = SBKLoginButton(type: .white,
 @end
 
 SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonStyleGreen 
-							  clientId:@"clientId" 
-							  observer:[LoginButtonObserver new]];
+							  							  observer:[LoginButtonObserver new]];
 ```
 #### Проверка на возможность запуска приложения Сбербанк Онлайн
 
@@ -221,6 +140,94 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 
 ❗️Если у вас статическая сборка библиотеки, далее перейдите в раздел [настройки статической библиотеки](#Статика)
 
+
+## Инициализация SDK при старте приложения <a name="Инициализация"></a>
+
+При старте вашего мобильного приложения необходмо передать значение вашего clientID. Данный ID будет использоваться 
+во всех процессах авторизации и работе методов SDK
+
+###### Swift
+
+```swift
+import SberIdSDK
+
+.
+.
+.
+
+SBKAuthManager.setClientID("clientId")
+```
+
+
+## Добавление кнопки Sber ID <a name="Добавление"></a> 
+
+- Импортируйте модуль SberIdSDK.
+
+###### Swift
+```swift
+import SberIdSDK
+```
+###### Objective C
+```Objective-C
+@import SberIdSDK;
+```
+
+- Создайте кнопку и добавьте её на view.
+
+###### Swift
+```swift
+// Инициализаторы для создания кнопки:
+
+/// Инициализатор создаст кнопку по стилистическому гайду Сбербанка с заданными размерами и выбранным заголовком
+/// - Parameters:
+///   - type: стиль кнопки
+///   - textType: вариант текста
+///   - desiredSize: желаемые высота и ширина
+///   - observer: наблюдатель состояния кнопки
+init(type: LoginButtonStyle,
+     textType: LoginButtonTextType,
+     desiredSize: CGSize,
+     observer: LoginButtonObserverProtocol? = nil) {}
+     
+/// Инициализатор создаст кнопку только по выбранному стилю
+/// - Parameters:
+///   - type: стиль кнопки
+///   - observer: наблюдатель состояния кнопки
+init(type: LoginButtonStyle,
+     observer: LoginButtonObserverProtocol? = nil) {}
+     
+// Пример:
+let loginButton = SBKLoginButton(type: .white)
+loginButton.addTarget(self, action: #selector(loginButtonDidTap(_:)), for: .touchUpInside)
+view.addSubview(loginButton)
+```
+
+###### Objective C
+```Objective-C
+// Инициализаторы для создания кнопки:
+
+/// Инициализатор создаст кнопку по стилистическому гайду Сбербанка с заданными размерами и выбранным заголовком
+/// params:
+///   type: стиль кнопки
+///   textType: вариант текста
+///   desiredSize: желаемые высота и ширина
+///   observer: наблюдатель состояния кнопки
+- (nonnull instancetype)initWithType:(enum LoginButtonStyle) 
+                            textType:(enum LoginButtonTextType)
+                         desiredSize:(CGSize)
+                            observer:(id<LoginButtonObserverProtocol> _Nullable) {}
+
+/// Инициализатор создаст кнопку только по выбранному стилю
+///   type: стиль кнопки
+///   observer: наблюдатель состояния кнопки
+- (nonnull instancetype)initWithType:(enum LoginButtonStyle)
+                            observer:(id<LoginButtonObserverProtocol> _Nullable) {}
+
+// Пример:
+SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonStyleGreen observer:nil];
+[loginButton addTarget:self action:@selector(loginButtonDidTap:) forControlEvents:UIControlEventTouchUpInside];
+[self.view addSubview:loginButton];
+```
 ## Запуск процесса авторизации по Сбер ID <a name="Запуск"></a> 
 
 Для успешного запроса авторизации создайте и заполните объект ```SBKAuthRequest``` параметрами. Их описание можно найти в [1.1.2.1. Параметры запроса](https://api.developer.sber.ru/product/SberbankID/doc/v1/reqmobile). <a name="ПараметрыЗапроса"></a> 
@@ -234,7 +241,6 @@ let verifier = SBKUtils.createVerifier()
 let challenge = SBKUtils.createChallenge(verifier)
  
 let request = SBKAuthRequest()
-request.clientId = "your client id"
 request.nonce = "your nonce"
 request.scope = "your scope" //Перечисление scope через пробел
 request.state = "your state"
@@ -256,7 +262,6 @@ NSString *verifier = [SBKUtils createVerifier];
 NSString *challenge = [SBKUtils createChallenge:verifier];
  
 SBKAuthRequest *request = [SBKAuthRequest new];
-request.clientId = @"your cliend id";
 request.nonce = @"your nonce";
 request.scope = @"your scope"; //Перечисление scope через пробел
 request.state = @"your state";
@@ -449,14 +454,13 @@ appScheme://redirect?status=fail&error=invalid_request
 let ssoBaseUrl = SBKUtils.getSSOUrlStringFrom(receivedUrl)
 
 /// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
-let request = SBKAuthRequest(clientId: "client-ID",
-                             scope: "scope",
+let request = SBKAuthRequest(scope: "scope",
                              state: "state",
                              nonce: "nonce",
-			     ssoBaseUrl: ssoBaseUrl,
-			     redirectUri: "https://testRedirect.url",
-			     codeChallenge: "challenge",
-			     codeChallengeMethod: SBKAuthRequest.challengeMethod)
+			     			 ssoBaseUrl: ssoBaseUrl,
+			     			 redirectUri: "https://testRedirect.url",
+			     			 codeChallenge: "challenge",
+			     			 codeChallengeMethod: SBKAuthRequest.challengeMethod)
 
 /// ИЛИ:
 let request = SBKAuthRequest()
@@ -475,14 +479,13 @@ SBKAuthManager.auth(withSberId: request)
 NSString *ssoBaseUrl = [SBKUtils getSSOUrlStringFrom:receivedUrl];
 
 /// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
-SBKAuthRequest *request = [[SBKAuthRequest alloc] initWithClientId:@"client-ID" 
-							     scope:@"scope"
-							     state:@"state"
-							     nonce:@"nonce"
-							ssoBaseUrl:ssoBaseUrl
-						       redirectUri:@"https://testRedirect.url"
-						     codeChallenge:@"challenge"
-					       codeChallengeMethod: SBKAuthRequest.challengeMethod];
+SBKAuthRequest *request = [[SBKAuthRequest alloc] initWithScope:@"scope"
+														  state:@"state"
+														  nonce:@"nonce"
+													 ssoBaseUrl:ssoBaseUrl
+													redirectUri:@"https://testRedirect.url"
+												  codeChallenge:@"challenge"
+											codeChallengeMethod:SBKAuthRequest.challengeMethod];
 					       
 /// ИЛИ:
 SBKAuthRequest *request = [SBKAuthRequest new];
