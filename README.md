@@ -5,58 +5,40 @@ iOS SDK помогает реализовать получение кода ав
 
 Для выполнения успешных запросов вам необходимо зарегистрировать ваше приложение в банке и подписать договор. Заявку можно оставить по [ссылке](https://developers.sber.ru/portal/tools/sber-id)
 
-#### Авторизация:
+### Содержание:
 
-[- Подключение SDK к вашему проекту](#Подключение)
+#### - Подключение iOS SDK
 
-[- Настройка SDK](#Настройка)
+#### - Настройка plist
 
-[- Инициализация SDK при старте приложения](#Инициализация)
+#### - Добавление кнопки Войти по Сбер ID
 
-[- Добавление кнопки Sber ID](#Добавление)
+#### - Запуск процесса авторизации по Сбер ID
 
-[- Запуск процесса авторизации по Сбер ID](#Запуск)
+#### - Обработка ответа после авторизации
 
-[- Обработка ответа после авторизации](#Обработка)
+#### - Дополнительные способы авторизации
 
-[- Отправка события о старте авторизации с использованием висов](#АльтернативныеСервисы)
-
-[- Ошибки](#Ошибки)
-
-[- Настройка статической библиотеки](#Статика)
-
-#### Дополнительные способы авторизации:
-
-[- Поддержка бесшовной авторизации](#ПоддержкаБесшовки)
-
-[- Авторизация через единый web-портал авторизации по Сбер ID](#web-портал)
-
-#### Внешний вид кнопки:
-
-[- Кастомизация кнопки](#Кастомизация)
-
-[- Персонализация](#Персонализация)
-
-## Подключение SDK к проекту <a name="Подключение"></a> 
+# Подключение iOS SDK <a name="Подключение"></a> 
  
-- Перетащите ```SberIdSDK.xcframework``` и ```MPAnalytics.xcframework```* в *Frameworks, Libraries, and Embedded Content*, а также выставите *Embed & Sign* и *Do Not Embed* соответственно.
+- Перетащите ```SberIdSDK.xcframework``` в *Frameworks, Libraries, and Embedded Content*, а также выставите *Embed & Sign*. Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberIdSDK.xcframework```
+- Начиная с версии 2.1.0 необходимо подключить ```Yandex AppMetrica SDK``` в ваш проект. Подключить ее можно любым из доступных методов, описанных на [странице AppMetrica](https://appmetrica.yandex.ru/docs/mobile-sdk-dg/ios/ios-quickstart.html)
 
 <img src="ReadMeImages/AddFramework.png" width="600">
 
+- С версии 2.3.0 мы временно отключили ```MPAnalytics```, если у вас она прежде была установлена, удалите ```MPAnalytics.xcframework``` и файл ```Media.bundle```. проверьте, что в *Frameworks, Libraries, and Embedded Content*  больше не подключена ```MPAnalytics```  и в *Build phases/CompileSources* нет файла ```MPAnalyticsDataModel.xcdatamodeld```.
+
 ###### *Начиная с версии 1.3.0 SDK автоматически формирует и отправляет на сервер Сбербанка события, связанные с авторизацией по Сбер ID (показ и клик по кнопке, результат авторизации). При установке ширины кнопки меньше минимально допустимой, дополнительно к событию показа будет отправлено событие установки некорректной ширины.
 
-- Отдельно добавьте ```MPAnalyticsDataModel.xcdatamodeld```, этот файл предоставляется в исходном виде и собирается вместе с приложением. Важно убрать галочку с *Copy items if needed*.
+### Настройка статической библиотеки <a name="Статика"></a> 
 
-<img src="ReadMeImages/addData1.png" width="550" height="200"> <img src="ReadMeImages/addData2.png" height="200">
-<img src="ReadMeImages/addData3.png" height="200"> <img src="ReadMeImages/addData4.png" height="200">
+Статическая библиотека сдк не может использовать свои ресурсы, например, картинки и переменные окружения, поэтому:
+- Функция оповещения о выходе новой версии сдк работать не будет, посмотреть актуальные версии вы сможете на нашем сайте
+- Для правильного отображения кнопки входа по Sber ID, добавьте иконки из папки *StaticLibraryImages* в ресурсы(*Assets*) вашего приложения
 
-- Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberIdSDK.xcframework```
+<img src="ReadMeImages/logoFiles.png" height="150"><img src="ReadMeImages/arrow.jpeg" height="150"><img src="ReadMeImages/logoAssets.png" height="150">
 
-<img src="ReadMeImages/oneFramework.png" width="600">
-
-- Начиная с версии 2.1.0 необходимо подключить ```Yandex AppMetrica SDK``` в ваш проект. Подключить ее можно любым из доступных методов, описанных на [странице AppMetrica](https://appmetrica.yandex.ru/docs/mobile-sdk-dg/ios/ios-quickstart.html)
-
-## Настройка SDK <a name="Настройка"></a> 
+# Настройка plist
 
 #### Проверка на допустимость авторизации по Сбер ID
 Начиная с версии 2.0.0 в SDK реализована фоновая проверка на допустимость выполнения операции авторизации по Сбер ID. Она происходит путем запроса, для которого необходимо установить новые параметры в *Info.plist*.
@@ -141,7 +123,7 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 ❗️Если у вас статическая сборка библиотеки, далее перейдите в раздел [настройки статической библиотеки](#Статика)
 
 
-## Инициализация SDK при старте приложения <a name="Инициализация"></a>
+# Добавление кнопки Войти по Сбер ID
 
 При старте вашего мобильного приложения необходмо передать значение вашего clientID. Данный ID будет использоваться 
 во всех процессах авторизации и работе методов SDK
@@ -157,9 +139,6 @@ import SberIdSDK
 
 SBKAuthManager.setClientID("clientId")
 ```
-
-
-## Добавление кнопки Sber ID <a name="Добавление"></a> 
 
 - Импортируйте модуль SberIdSDK.
 
@@ -228,310 +207,7 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 [loginButton addTarget:self action:@selector(loginButtonDidTap:) forControlEvents:UIControlEventTouchUpInside];
 [self.view addSubview:loginButton];
 ```
-## Запуск процесса авторизации по Сбер ID <a name="Запуск"></a> 
 
-Для успешного запроса авторизации создайте и заполните объект ```SBKAuthRequest``` параметрами. Их описание можно найти в [1.1.2.1. Параметры запроса](https://api.developer.sber.ru/product/SberbankID/doc/v1/reqmobile). <a name="ПараметрыЗапроса"></a> 
-
-Метод ```auth``` создадаст уникальную ссылку и для авторизации откроет мобильное приложение Сбербанк Онлайн (при наличии) либо веб окно. Для авторизации через метод ```soleLoginWebPageAuth``` перейдите в раздел [Авторизация через единый web-портал авторизации по Сбер ID](#web-портал)
-
-###### Swift
-```swift
-// Параметры для поддержки PKCE
-let verifier = SBKUtils.createVerifier()
-let challenge = SBKUtils.createChallenge(verifier)
- 
-let request = SBKAuthRequest()
-request.nonce = "your nonce"
-request.scope = "your scope" //Перечисление scope через пробел
-request.state = "your state"
-request.redirectUri = "myapp://sberidauth"
-request.codeChallenge = challenge //Необязательный параметр
-request.codeChallengeMethod = SBKAuthRequest.challengeMethod //Необязательный параметр
- 
-// Запуск авторизации
-let loginViewController = UIViewController()
-SBKAuthManager.auth(withSberId: request, loginViewController) // Авторизоваться с помощью Сбербанк Онлайн, 
-                                                              // если Сбербанк онлайн не установлен открывается
-                                                              // веб окно авторизации.
-```
-
-###### Objective C
-```Objective-C
-// Параметры для поддержки PKCE
-NSString *verifier = [SBKUtils createVerifier];
-NSString *challenge = [SBKUtils createChallenge:verifier];
- 
-SBKAuthRequest *request = [SBKAuthRequest new];
-request.nonce = @"your nonce";
-request.scope = @"your scope"; //Перечисление scope через пробел
-request.state = @"your state";
-request.redirectUri = @"myapp://sberidauth";
-request.codeChallenge = challenge; //Необязательный параметр
-request.codeChallengeMethod = SBKAuthRequest.challengeMethod; //Необязательный параметр
- 
-// Запуск авторизации
-UIViewController *loginViewController = [UIViewController new];
-[SBKAuthManager authWithSberId:request viewController:loginViewController]; // Авторизоваться с помощью Сбербанк Онлайн, 
-                                                                            // если Сбербанк онлайн не установлен открывается
-                                                                            // веб окно авторизации.
-```
-*в версиях до 1.3.1 открывается внешний браузер Safari - на данный момент это запрещено Apple.
-
-*в версиях до 2.0.0, если вы использовали устаревшие методы запуска авторизации без ```viewController```, нужно установить свойство ```SBKAuthManager.navigationController```, чтобы открылся ```SafariViewController```, когда приложение Сбербанк Онлайн не может быть запущено (```UIApplication.shared.canOpenURL``` для Сбербанк Онлайн возвращает ```false```).
-
-## Обработка ответа после авторизации <a name="Обработка"></a> 
-
-После авторизации Сбербанк Онлайн перенаправит вас обратно в ваше приложение по адресу, указанному в параметре ```redirectUri``` объекта ```SBKAuthRequest```. Для того чтобы при переходе открылось ваше приложение, необходимо зарегистрировать deeplink(адрес) вашего приложения.
-
-Откройте параметры проекта и перейдите во вкладку *Info*. В нижней части добавьте свой *URL Type*.
-
-<img src="ReadMeImages/addDeeplink.png" width="800">
-
-
-Далее в файле *AppDelegate* прописываем свою логику (см. пример ниже), метод ```application``` вызывается при открытии вашего приложения по deeplink(ссылке). ```SBKAuthManager.getResponseFrom(_ url: URL, completion: (SBKAuthResponse) -> Void)``` вернет вам объект ```SBKAuthResponse``` с полученными параметрами. 
-
-###### Swift
-
-```swift
-func application(_ app: UIApplication, 
-		 open url: URL, 
-		 options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {     
-    if url.scheme == "myapp" && url.host == "sberidauth" {
-        SBKAuthManager.getResponseFrom(url) { response in
-	    //do something         
-        }
-    }
-    return true
-}
-```
-
-###### Objective C
-
-```objc
-- (BOOL)application:(UIApplication *)app 
-	    openURL:(NSURL *)url 
-	    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-    if ([url.scheme isEqualToString:@"myapp"] && [url.host isEqualToString:@"sberidauth"])
-    {
-        [SBKAuthManager getResponseFrom:url completion:^(SBKAuthResponse *response) {
-	    //do something
-        }];
-    }
-    return YES;
-}
-```
-
-Модель ответа:
-
-###### Swift
-
-```swift
-class SBKAuthResponse : NSObject {
-
-    /// Значение, сгенерированное внешней АС для предотвращения атак повторения
-    var nonce: String { get }
-
-    /// Значение для предотвращения подделки межсайтовых запросов, случайно сгенерированное
-    var state: String? { get }
-
-    /// Код авторизации клиента
-    var authCode: String? { get }
-
-    /// Текст ошибки
-    var error: String? { get }
-
-    /// Статус операции
-    var isSuccess: Bool { get }
-}
-```
-###### Objective C
-
-```objc
-@interface SBKAuthResponse : NSObject
-
-/// Значение, сгенерированное внешней АС для предотвращения атак повторения
-@property (nonatomic, readonly, copy) NSString * _Nonnull nonce;
-
-/// Значение для предотвращения подделки межсайтовых запросов, случайно сгенерированное
-@property (nonatomic, readonly, copy) NSString * _Nullable state;
-
-/// Код авторизации клиента
-@property (nonatomic, readonly, copy) NSString * _Nullable authCode;
-
-/// Текст ошибки
-@property (nonatomic, readonly, copy) NSString * _Nullable error;
-
-/// Статус операции
-@property (nonatomic, readonly) BOOL isSuccess;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-@end
-```
-
-## Отправка события о старте авторизации с использованием альтернативных сервисов <a name="АльтернативныеСервисы"></a> 
-
-Для отправки метрики о событии использования альтернативных сервисов авторизации предусмотренно 2 статических метода метода класса ```SBKAuthManager```: 
-- с предусмотренным перечислением популярных сервисов; 
-- с возможностью указать название самостоятельно.
-
-###### Swift
-```swift
-/// Передать метрики использования сервисов авторизации, отличных от Сбер ID
-/// - Parameters:
-///   - serviceName: название сервиса, который использовал пользователь
-///   - isSuccess: флаг успешности входа
-///   - userStatus: флаг, впервые ли пользователь регистрируется
-@objc public static func sendOtherAuth(serviceName: String, isSuccess: SBKTrinity, userStatus: SBKTrinity)
-
-/// Передать метрики использования сервисов авторизации, отличных от Сбер ID
-/// - Parameters:
-///   - service: сервис, который использовал пользователь
-///   - isSuccess: флаг успешности входа
-///   - isUserNew: флаг, впервые ли пользователь регистрируется
-@objc public static func sendOtherAuth(service: AuthServiceType, isSuccess: SBKTrinity, isUserNew: SBKTrinity)
-
-```
-
-### Предусмотренный перечень популярных сервисов
-
-	- local - ваша внутренняя система авторизации
-	- instagram
-	- gosUslugi
-	- facebook
-	- myMoscow
-	- yandex
-	- google
-	- mailRu
-	- apple
-	- avito
-	- vk
-	- ok
-
-## Ошибки <a name="Ошибки"></a> 
-
-Если state сгенерированный вами и state возвращенный при авторизации по Сбер ID не совпадет, результат будет ошибочным, в SberIDResultModel.errorDescription вернется фраза "invalid_state". При других ошибках, таких как падение приложения Сбербанк Онлайн, прерывание сценария и др. будет ошибка "internal_error"
-
-Пример ответа с ошибкой:
-
-```
-appScheme://redirect?status=fail&error=invalid_request
-```
-
-|№|типы возвращаемых ошибок|описание ошибки|
-|:-------:|:-------:|:-------:|
-|1|invalid_request|В запросе отсутствуют обязательные атрибуты.|
-|2|unauthorized_client|АС-источник запроса не зарегистрирована в банке.|
-|3|unauthorized_client|АС-источник запроса заблокирована в банке.|
-|4|unauthorized_client|Значение атрибута client_id не соответствует формату.|
-|5|unsupported_response_type|Значение атрибута response_type не равно «code».|
-|6|invalid_scope|Запрошенный scope содержит значения, недоступные для АС-источника запроса.|
-|7|invalid_request|Значение code_challenge_method не соответствуют допустимым значениям.|
-
-## Настройка статической библиотеки <a name="Статика"></a> 
-
-Статическая библиотека сдк не может использовать свои ресурсы, например, картинки и переменные окружения, поэтому:
-- Функция оповещения о выходе новой версии сдк работать не будет, посмотреть актуальные версии вы сможете на нашем сайте
-- Для правильного отображения кнопки входа по Sber ID, добавьте иконки из папки *StaticLibraryImages* в ресурсы(*Assets*) вашего приложения
-
-<img src="ReadMeImages/logoFiles.png" height="150"><img src="ReadMeImages/arrow.jpeg" height="150"><img src="ReadMeImages/logoAssets.png" height="150">
-
-## Поддержка бесшовной авторизации <a name="ПоддержкаБесшовки"></a>
-
-Начиная с версии SDK 1.4.0 реализована поддержка бесшовной авторизации по Сбер ID. Бесшовная авторизация возможна при переходе из приложений СберБанка в ваше приложение и позволяет запустить авторизацию без показа кнопки и без нажатия на нее пользователем.
-
-В диплинке, который придет в ваше приложение, будет дополнительный параметр - базовый урл. Чтобы получить значение этого параметра, необходимо воспользоваться методом ```getSSOUrlStringFrom(_ url: URL?)``` класса ```SBKUtils```, передав в него пришедший диплинк. Полученное значение необходимо передать в свойство ```ssoBaseUrl``` при построении объекта ```SBKAuthRequest```.
-
-
-###### Для стандартной (не бесшовной) авторизации по Сбер ID с кнопкой, выполнять указанные в этом пункте действия не нужно.
-
-###### Swift
-
-```swift
-/// Получение параметра ssoBaseUrl
-let ssoBaseUrl = SBKUtils.getSSOUrlStringFrom(receivedUrl)
-
-/// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
-let request = SBKAuthRequest(scope: "scope",
-                             state: "state",
-                             nonce: "nonce",
-			     			 ssoBaseUrl: ssoBaseUrl,
-			     			 redirectUri: "https://testRedirect.url",
-			     			 codeChallenge: "challenge",
-			     			 codeChallengeMethod: SBKAuthRequest.challengeMethod)
-
-/// ИЛИ:
-let request = SBKAuthRequest()
-/// заполнение запроса параметрами
-request.ssoBaseUrl = ssoBaseUrl
-
-/// Запуск авторизации
-SBKAuthManager.auth(withSberId: request)
-```
-
-
-###### Objective C
-
-```objc
-/// Получение параметра ssoBaseUrl
-NSString *ssoBaseUrl = [SBKUtils getSSOUrlStringFrom:receivedUrl];
-
-/// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
-SBKAuthRequest *request = [[SBKAuthRequest alloc] initWithScope:@"scope"
-														  state:@"state"
-														  nonce:@"nonce"
-													 ssoBaseUrl:ssoBaseUrl
-													redirectUri:@"https://testRedirect.url"
-												  codeChallenge:@"challenge"
-											codeChallengeMethod:SBKAuthRequest.challengeMethod];
-					       
-/// ИЛИ:
-SBKAuthRequest *request = [SBKAuthRequest new];
-/// заполнение запроса параметрами
-request.ssoBaseUrl = ssoBaseUrl
-
-/// Запуск авторизации
-[SBKAuthManager authWithSberId:request];
-```
-
-Все остальные действия по подготовке диплинка и старте авторизации аналогичны описанным в разделе [Запуск процесса авторизации по Сбер ID](#Запуск).
-
-## Авторизация через единый web-портал авторизации по Сбер ID (OIDC) <a name="web-портал"></a>
-
-В версии SDK 1.4.0 был добавлен новый метод для авторизации пользователя по Сбер ID. Он использует единое веб окно авторизации, которое открывается в вашем приложении через ```SafariViewController```. Кэширование веб окна ускоряет процесс авторизации при последующих запросах.
-
-**Для этого:**
-- Необходимо направить запрос нам на [почту](support@ecom.sberbank.ru) для добавления ваших диплинков в список доверенных. В запросе указывается ```client_id``` и список диплинков, по которым будет производиться возврат в ваше мобильное приложение.
-- Создайте запрос ```SBKAuthRequest```, как при [обычном входе](#Запуск).
-- Запустите OIDC авторизацию через метод ```soleLoginWebPageAuth``` с дополнительным параметром ```svcRedirectUrlString```. Если запуск сценария невозможен, вернется false.
-
-###### Swift
-```swift
-let loginViewController = UIViewController()
-SBKAuthManager.soleLoginWebPageAuth(sberIdRequest: request,           
-                                    svcRedirectUrlString: "Ваш диплинк",
-                                    viewController: loginViewController) // Авторизация с помощью веб окна.
-```
-
-###### Objective C
-
-```Objective-C
-// Запуск авторизации
-UIViewController *loginViewController = [UIViewController new];
-[SBKAuthManager soleLoginWebPageAuthWithSberIdRequest:request 
-                                 svcRedirectUrlString:@"Ваш диплинк" 
-                                       viewController:yourLoginViewController]; // Авторизация с помощью веб окна.
-```
-
-
-
-Откроется единое веб окно авторизации в SafariViewController с различными способами идентификации входа по Сбер ID:
-
-<img src="ReadMeImages/controllerVariousWays.png" height="400">
-
-Новый параметр ```svcRedirectUrlString``` используется для передачи «активности» в ваше приложение из ```SafariViewControllera```. После прохождения авторизации на портале и возврата в ваше приложение(по диплинку из ```svcRedirectUrlString```) процесс авторизации продолжит работу по стандартному сценарию OIDC. В ваше приложение вернется ```AuthCode``` и другие параметры через диплинк, переданный в ```SBKAuthRequest().redirectUri```. Вам необходимо закрыть ```SafariViewController``` самостоятельно. Дальнейшие шаги процесса авторизации описаны в разделе [Запуск процесса авторизации по Сбер ID](#Запуск)
 
 
 ## Кастомизация кнопки <a name="Кастомизация"></a> 
@@ -645,3 +321,303 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 	<key>AppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
 ```
+
+# Запуск процесса авторизации по Сбер ID
+
+Для успешного запроса авторизации создайте и заполните объект ```SBKAuthRequest``` параметрами. Их описание можно найти в [1.1.2.1. Параметры запроса](https://api.developer.sber.ru/product/SberbankID/doc/v1/reqmobile). <a name="ПараметрыЗапроса"></a> 
+
+Метод ```auth``` создадаст уникальную ссылку и для авторизации откроет мобильное приложение Сбербанк Онлайн (при наличии) либо веб окно. Для авторизации через метод ```soleLoginWebPageAuth``` перейдите в раздел [Авторизация через единый web-портал авторизации по Сбер ID](#web-портал)
+
+###### Swift
+```swift
+// Параметры для поддержки PKCE
+let verifier = SBKUtils.createVerifier()
+let challenge = SBKUtils.createChallenge(verifier)
+ 
+let request = SBKAuthRequest()
+request.nonce = "your nonce"
+request.scope = "your scope" //Перечисление scope через пробел
+request.state = "your state"
+request.redirectUri = "myapp://sberidauth"
+request.codeChallenge = challenge //Необязательный параметр
+request.codeChallengeMethod = SBKAuthRequest.challengeMethod //Необязательный параметр
+ 
+// Запуск авторизации
+let loginViewController = UIViewController()
+SBKAuthManager.auth(withSberId: request, loginViewController) // Авторизоваться с помощью Сбербанк Онлайн, 
+                                                              // если Сбербанк онлайн не установлен открывается
+                                                              // веб окно авторизации.
+```
+
+###### Objective C
+```Objective-C
+// Параметры для поддержки PKCE
+NSString *verifier = [SBKUtils createVerifier];
+NSString *challenge = [SBKUtils createChallenge:verifier];
+ 
+SBKAuthRequest *request = [SBKAuthRequest new];
+request.nonce = @"your nonce";
+request.scope = @"your scope"; //Перечисление scope через пробел
+request.state = @"your state";
+request.redirectUri = @"myapp://sberidauth";
+request.codeChallenge = challenge; //Необязательный параметр
+request.codeChallengeMethod = SBKAuthRequest.challengeMethod; //Необязательный параметр
+ 
+// Запуск авторизации
+UIViewController *loginViewController = [UIViewController new];
+[SBKAuthManager authWithSberId:request viewController:loginViewController]; // Авторизоваться с помощью Сбербанк Онлайн, 
+                                                                            // если Сбербанк онлайн не установлен открывается
+                                                                            // веб окно авторизации.
+```
+*в версиях до 1.3.1 открывается внешний браузер Safari - на данный момент это запрещено Apple.
+
+*в версиях до 2.0.0, если вы использовали устаревшие методы запуска авторизации без ```viewController```, нужно установить свойство ```SBKAuthManager.navigationController```, чтобы открылся ```SafariViewController```, когда приложение Сбербанк Онлайн не может быть запущено (```UIApplication.shared.canOpenURL``` для Сбербанк Онлайн возвращает ```false```).
+
+
+### Отправка события о старте авторизации с использованием альтернативных сервисов
+
+Для отправки метрики о событии использования альтернативных сервисов авторизации предусмотренно 2 статических метода метода класса ```SBKAuthManager```: 
+- с предусмотренным перечислением популярных сервисов; 
+- с возможностью указать название самостоятельно.
+
+###### Swift
+```swift
+/// Передать метрики использования сервисов авторизации, отличных от Сбер ID
+/// - Parameters:
+///   - serviceName: название сервиса, который использовал пользователь
+///   - isSuccess: флаг успешности входа
+///   - userStatus: флаг, впервые ли пользователь регистрируется
+@objc public static func sendOtherAuth(serviceName: String, isSuccess: SBKTrinity, userStatus: SBKTrinity)
+
+/// Передать метрики использования сервисов авторизации, отличных от Сбер ID
+/// - Parameters:
+///   - service: сервис, который использовал пользователь
+///   - isSuccess: флаг успешности входа
+///   - isUserNew: флаг, впервые ли пользователь регистрируется
+@objc public static func sendOtherAuth(service: AuthServiceType, isSuccess: SBKTrinity, isUserNew: SBKTrinity)
+
+```
+
+### Предусмотренный перечень популярных сервисов
+
+	- local - ваша внутренняя система авторизации
+	- instagram
+	- gosUslugi
+	- facebook
+	- myMoscow
+	- yandex
+	- google
+	- mailRu
+	- apple
+	- avito
+	- vk
+	- ok
+
+
+# Обработка ответа после авторизации
+
+После авторизации Сбербанк Онлайн перенаправит вас обратно в ваше приложение по адресу, указанному в параметре ```redirectUri``` объекта ```SBKAuthRequest```. Для того чтобы при переходе открылось ваше приложение, необходимо зарегистрировать deeplink(адрес) вашего приложения.
+
+Откройте параметры проекта и перейдите во вкладку *Info*. В нижней части добавьте свой *URL Type*.
+
+<img src="ReadMeImages/addDeeplink.png" width="800">
+
+
+Далее в файле *AppDelegate* прописываем свою логику (см. пример ниже), метод ```application``` вызывается при открытии вашего приложения по deeplink(ссылке). ```SBKAuthManager.getResponseFrom(_ url: URL, completion: (SBKAuthResponse) -> Void)``` вернет вам объект ```SBKAuthResponse``` с полученными параметрами. 
+
+###### Swift
+
+```swift
+func application(_ app: UIApplication, 
+		 open url: URL, 
+		 options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {     
+    if url.scheme == "myapp" && url.host == "sberidauth" {
+        SBKAuthManager.getResponseFrom(url) { response in
+	    //do something         
+        }
+    }
+    return true
+}
+```
+
+###### Objective C
+
+```objc
+- (BOOL)application:(UIApplication *)app 
+	    openURL:(NSURL *)url 
+	    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    if ([url.scheme isEqualToString:@"myapp"] && [url.host isEqualToString:@"sberidauth"])
+    {
+        [SBKAuthManager getResponseFrom:url completion:^(SBKAuthResponse *response) {
+	    //do something
+        }];
+    }
+    return YES;
+}
+```
+
+Модель ответа:
+
+###### Swift
+
+```swift
+class SBKAuthResponse : NSObject {
+
+    /// Значение, сгенерированное внешней АС для предотвращения атак повторения
+    var nonce: String { get }
+
+    /// Значение для предотвращения подделки межсайтовых запросов, случайно сгенерированное
+    var state: String? { get }
+
+    /// Код авторизации клиента
+    var authCode: String? { get }
+
+    /// Текст ошибки
+    var error: String? { get }
+
+    /// Статус операции
+    var isSuccess: Bool { get }
+}
+```
+###### Objective C
+
+```objc
+@interface SBKAuthResponse : NSObject
+
+/// Значение, сгенерированное внешней АС для предотвращения атак повторения
+@property (nonatomic, readonly, copy) NSString * _Nonnull nonce;
+
+/// Значение для предотвращения подделки межсайтовых запросов, случайно сгенерированное
+@property (nonatomic, readonly, copy) NSString * _Nullable state;
+
+/// Код авторизации клиента
+@property (nonatomic, readonly, copy) NSString * _Nullable authCode;
+
+/// Текст ошибки
+@property (nonatomic, readonly, copy) NSString * _Nullable error;
+
+/// Статус операции
+@property (nonatomic, readonly) BOOL isSuccess;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+@end
+```
+
+## Ошибки <a name="Ошибки"></a> 
+
+Если state сгенерированный вами и state возвращенный при авторизации по Сбер ID не совпадет, результат будет ошибочным, в SberIDResultModel.errorDescription вернется фраза "invalid_state". При других ошибках, таких как падение приложения Сбербанк Онлайн, прерывание сценария и др. будет ошибка "internal_error"
+
+Пример ответа с ошибкой:
+
+```
+appScheme://redirect?status=fail&error=invalid_request
+```
+
+|№|типы возвращаемых ошибок|описание ошибки|
+|:-------:|:-------:|:-------:|
+|1|invalid_request|В запросе отсутствуют обязательные атрибуты.|
+|2|unauthorized_client|АС-источник запроса не зарегистрирована в банке.|
+|3|unauthorized_client|АС-источник запроса заблокирована в банке.|
+|4|unauthorized_client|Значение атрибута client_id не соответствует формату.|
+|5|unsupported_response_type|Значение атрибута response_type не равно «code».|
+|6|invalid_scope|Запрошенный scope содержит значения, недоступные для АС-источника запроса.|
+|7|invalid_request|Значение code_challenge_method не соответствуют допустимым значениям.|
+
+
+## Поддержка бесшовной авторизации <a name="ПоддержкаБесшовки"></a>
+
+Начиная с версии SDK 1.4.0 реализована поддержка бесшовной авторизации по Сбер ID. Бесшовная авторизация возможна при переходе из приложений СберБанка в ваше приложение и позволяет запустить авторизацию без показа кнопки и без нажатия на нее пользователем.
+
+В диплинке, который придет в ваше приложение, будет дополнительный параметр - базовый урл. Чтобы получить значение этого параметра, необходимо воспользоваться методом ```getSSOUrlStringFrom(_ url: URL?)``` класса ```SBKUtils```, передав в него пришедший диплинк. Полученное значение необходимо передать в свойство ```ssoBaseUrl``` при построении объекта ```SBKAuthRequest```.
+
+
+###### Для стандартной (не бесшовной) авторизации по Сбер ID с кнопкой, выполнять указанные в этом пункте действия не нужно.
+
+###### Swift
+
+```swift
+/// Получение параметра ssoBaseUrl
+let ssoBaseUrl = SBKUtils.getSSOUrlStringFrom(receivedUrl)
+
+/// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
+let request = SBKAuthRequest(scope: "scope",
+                             state: "state",
+                             nonce: "nonce",
+			     			 ssoBaseUrl: ssoBaseUrl,
+			     			 redirectUri: "https://testRedirect.url",
+			     			 codeChallenge: "challenge",
+			     			 codeChallengeMethod: SBKAuthRequest.challengeMethod)
+
+/// ИЛИ:
+let request = SBKAuthRequest()
+/// заполнение запроса параметрами
+request.ssoBaseUrl = ssoBaseUrl
+
+/// Запуск авторизации
+SBKAuthManager.auth(withSberId: request)
+```
+
+
+###### Objective C
+
+```objc
+/// Получение параметра ssoBaseUrl
+NSString *ssoBaseUrl = [SBKUtils getSSOUrlStringFrom:receivedUrl];
+
+/// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
+SBKAuthRequest *request = [[SBKAuthRequest alloc] initWithScope:@"scope"
+														  state:@"state"
+														  nonce:@"nonce"
+													 ssoBaseUrl:ssoBaseUrl
+													redirectUri:@"https://testRedirect.url"
+												  codeChallenge:@"challenge"
+											codeChallengeMethod:SBKAuthRequest.challengeMethod];
+					       
+/// ИЛИ:
+SBKAuthRequest *request = [SBKAuthRequest new];
+/// заполнение запроса параметрами
+request.ssoBaseUrl = ssoBaseUrl
+
+/// Запуск авторизации
+[SBKAuthManager authWithSberId:request];
+```
+
+Все остальные действия по подготовке диплинка и старте авторизации аналогичны описанным в разделе [Запуск процесса авторизации по Сбер ID](#Запуск).
+
+## Авторизация через единый web-портал авторизации по Сбер ID (OIDC) <a name="web-портал"></a>
+
+В версии SDK 1.4.0 был добавлен новый метод для авторизации пользователя по Сбер ID. Он использует единое веб окно авторизации, которое открывается в вашем приложении через ```SafariViewController```. Кэширование веб окна ускоряет процесс авторизации при последующих запросах.
+
+**Для этого:**
+- Необходимо направить запрос нам на [почту](support@ecom.sberbank.ru) для добавления ваших диплинков в список доверенных. В запросе указывается ```client_id``` и список диплинков, по которым будет производиться возврат в ваше мобильное приложение.
+- Создайте запрос ```SBKAuthRequest```, как при [обычном входе](#Запуск).
+- Запустите OIDC авторизацию через метод ```soleLoginWebPageAuth``` с дополнительным параметром ```svcRedirectUrlString```. Если запуск сценария невозможен, вернется false.
+
+###### Swift
+```swift
+let loginViewController = UIViewController()
+SBKAuthManager.soleLoginWebPageAuth(sberIdRequest: request,           
+                                    svcRedirectUrlString: "Ваш диплинк",
+                                    viewController: loginViewController) // Авторизация с помощью веб окна.
+```
+
+###### Objective C
+
+```Objective-C
+// Запуск авторизации
+UIViewController *loginViewController = [UIViewController new];
+[SBKAuthManager soleLoginWebPageAuthWithSberIdRequest:request 
+                                 svcRedirectUrlString:@"Ваш диплинк" 
+                                       viewController:yourLoginViewController]; // Авторизация с помощью веб окна.
+```
+
+
+
+Откроется единое веб окно авторизации в SafariViewController с различными способами идентификации входа по Сбер ID:
+
+<img src="ReadMeImages/controllerVariousWays.png" height="400">
+
+Новый параметр ```svcRedirectUrlString``` используется для передачи «активности» в ваше приложение из ```SafariViewControllera```. После прохождения авторизации на портале и возврата в ваше приложение(по диплинку из ```svcRedirectUrlString```) процесс авторизации продолжит работу по стандартному сценарию OIDC. В ваше приложение вернется ```AuthCode``` и другие параметры через диплинк, переданный в ```SBKAuthRequest().redirectUri```. Вам необходимо закрыть ```SafariViewController``` самостоятельно. Дальнейшие шаги процесса авторизации описаны в разделе [Запуск процесса авторизации по Сбер ID](#Запуск)
