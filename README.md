@@ -22,6 +22,15 @@ iOS SDK помогает реализовать получение кода ав
 #### - Тестирование
 
 # Подключение iOS SDK <a name="Подключение"></a> 
+
+### Менеджер зависимостей Cocoapods
+
+Начиная с версии 2.4.0 сдк можно установить с помощью Cocoapods, для этого добавьте SberID в ваш Podfile:
+
+```Podfile
+pod 'SberIdSDK', '~> 2.4.0'
+```
+### Самостоятельная настройка библиотеки
  
 - Перетащите ```SberIdSDK.xcframework``` в 
 Frameworks, Libraries, and Embedded Content*, а также выставите *Embed & Sign*. Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberIdSDK.xcframework```
