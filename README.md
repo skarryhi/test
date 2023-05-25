@@ -353,7 +353,8 @@ request.state = "your state"
 request.redirectUri = "myapp://sberidauth"
 request.codeChallenge = challenge //Необязательный параметр
 request.codeChallengeMethod = SBKAuthRequest.challengeMethod //Необязательный параметр
- 
+request.loginHint = "79998887766" // Необязательный параметр для передачи номера телефона пользователя, 
+				  // добавлен в версии 2.4.2 
 // Запуск авторизации
 let loginViewController = UIViewController()
 SBKAuthManager.auth(withSberId: request, loginViewController) // Авторизоваться с помощью Сбербанк Онлайн, 
@@ -374,7 +375,8 @@ request.state = @"your state";
 request.redirectUri = @"myapp://sberidauth";
 request.codeChallenge = challenge; //Необязательный параметр
 request.codeChallengeMethod = SBKAuthRequest.challengeMethod; //Необязательный параметр
- 
+request.loginHint = @"79998887766"; // Необязательный параметр для передачи номера телефона пользователя, 
+				    // добавлен в версии 2.4.2 
 // Запуск авторизации
 UIViewController *loginViewController = [UIViewController new];
 [SBKAuthManager authWithSberId:request viewController:loginViewController]; // Авторизоваться с помощью Сбербанк Онлайн, 
