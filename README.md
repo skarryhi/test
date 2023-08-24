@@ -49,6 +49,7 @@ Frameworks, Libraries, and Embedded Content*, а также выставите *
 - Добавте бандл ```SberIdSDKResourcesBundle.bundle``` в проект
 
 <img src="ReadMeImages/logoFiles.png" height="150"><img src="ReadMeImages/arrow.jpeg" height="150"><img src="ReadMeImages/logoAssets.png" height="150">
+<img src="ReadMeImages/BandleFile.png" height="150"><img src="ReadMeImages/arrow.jpeg" height="150"><img src="ReadMeImages/BandlePlace.png" height="150">
 
 # Настройка plist
 
