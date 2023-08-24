@@ -1,7 +1,7 @@
 
 # Sber ID SDK
 
-iOS SDK помогает реализовать получение кода авторизации (Auth Code) Сбер ID минимальными усилиями со стороны разработчика и в соответствии с утвержденными гайдами по отображению кнопки. Чтобы добавить поддержку Сбер ID в свое приложение, следуйте инструкциям ниже. 
+iOS SDK помогает реализовать получение кода авторизации (Auth Code) Сбер ID минимальными усилиями со стороны разработчика и в соответствии с утвержденными гайдами по отображению кнопки. Чтобы добавить поддержку Сбер ID в свое приложение, следуйте инструкциям ниже.
 
 Для выполнения успешных запросов вам необходимо зарегистрировать ваше приложение в банке и подписать договор. Заявку можно оставить по [ссылке](https://developers.sber.ru/portal/tools/sber-id)
 
@@ -21,7 +21,7 @@ iOS SDK помогает реализовать получение кода ав
 
 #### - Тестирование
 
-# Подключение iOS SDK <a name="Подключение"></a> 
+# Подключение iOS SDK <a name="Подключение"></a>
 
 ### Менеджер зависимостей Cocoapods
 
@@ -31,8 +31,8 @@ iOS SDK помогает реализовать получение кода ав
 pod 'SberIdSDK', '~> 2.4.0'
 ```
 ### Самостоятельная настройка библиотеки
- 
-- Перетащите ```SberIdSDK.xcframework``` в 
+
+- Перетащите ```SberIdSDK.xcframework``` в
 Frameworks, Libraries, and Embedded Content*, а также выставите *Embed & Sign*. Во вкладке *Build Phases*, в параметрах *Embed Frameworks* проверьте, что добавлен только ```SberIdSDK.xcframework```
 - Начиная с версии 2.1.0 необходимо подключить ```Yandex AppMetrica SDK``` в ваш проект. Подключить ее можно любым из доступных методов, описанных на [странице AppMetrica](https://appmetrica.yandex.ru/docs/mobile-sdk-dg/ios/ios-quickstart.html)
 
@@ -42,11 +42,11 @@ Frameworks, Libraries, and Embedded Content*, а также выставите *
 
 ###### *Начиная с версии 1.3.0 SDK автоматически формирует и отправляет на сервер Сбербанка события, связанные с авторизацией по Сбер ID (показ и клик по кнопке, результат авторизации). При установке ширины кнопки меньше минимально допустимой, дополнительно к событию показа будет отправлено событие установки некорректной ширины.
 
-### Дополнительно настройте для статической библиотеки <a name="Статика"></a> 
+### Дополнительно настройте для статической библиотеки <a name="Статика"></a>
 
 Статическая библиотека сдк не может использовать свои ресурсы, например, картинки и переменные окружения, поэтому:
-- Функция оповещения о выходе новой версии сдк работать не будет, посмотреть актуальные версии вы сможете на нашем сайте
 - Для правильного отображения кнопки входа по Sber ID, добавьте иконки из папки *StaticLibraryImages* в ресурсы(*Assets*) вашего приложения
+- Добавте бандл ```SberIdSDKResourcesBundle.bundle``` в проект
 
 <img src="ReadMeImages/logoFiles.png" height="150"><img src="ReadMeImages/arrow.jpeg" height="150"><img src="ReadMeImages/logoAssets.png" height="150">
 
@@ -61,21 +61,21 @@ Frameworks, Libraries, and Embedded Content*, а также выставите *
 
 ```xml
 <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSExceptionDomains</key>
-        <dict>
-        	<key>*.report.appmetrica.yandex.net</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>*.report.appmetrica.yandex.net</key>
 			<true/>
-            <key>id.sber.ru</key>
-            <dict>
-                <key>NSExceptionAllowsInsecureHTTPLoads</key>
-                <true/>
-            </dict>
-        </dict>
-    </dict>
+			<key>id.sber.ru</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 ```
 
-#### Информирование о выходе новой версии сдк Sber ID (не поддерживается в статической сборке)
+#### Информирование о выходе новой версии сдк Sber ID
 
 С 2.1.0 появилились сообщения о выходе новой версии сдк, при выявлении критической версии в вашем приложении кнопка будет скрыта.
 - для работы данного функционала настройки не требуются
@@ -84,7 +84,7 @@ Frameworks, Libraries, and Embedded Content*, а также выставите *
 
 ❗️Важно: во избежание ситуации, когда скрытие кнопки Сбер ID повлияет на расположение элементов вашего экрана, предусмотрен специальный механизм получения информации о факте скрытия кнопки:
 
-- В инициализатор ```SBKLoginButton``` нужно передать объект ```observer```, который реализует протокол ```LoginButtonObserverProtocol``` с методом ```loginButtonWasHidden```
+- В инициализатор ```SIDLoginButton``` нужно передать объект ```observer```, который реализует протокол ```LoginButtonObserverProtocol``` с методом ```loginButtonWasHidden```
 
 ###### Swift
 
@@ -92,14 +92,14 @@ Frameworks, Libraries, and Embedded Content*, а также выставите *
 class LoginButtonObserver: LoginButtonObserverProtocol {
 
 	func loginButtonWasHidden() {
-		//do something 
+		//do something
 	}
 }
 
-let sberIdButton = SBKLoginButton(type: .white, 
-								  textType: .short, 
-								  desiredSize: CGSize(), 
-								  observer: LoginButtonObserver())
+let sberIdButton = SIDLoginButton(type: .white,
+				  textType: .short,
+				  desiredSize: CGSize(),
+				  observer: LoginButtonObserver())
 ```
 
 ###### Objective C
@@ -115,8 +115,8 @@ let sberIdButton = SBKLoginButton(type: .white,
 }
 @end
 
-SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonStyleGreen 
-							  							  observer:[LoginButtonObserver new]];
+SIDLoginButton *loginButton = [[SIDLoginButton alloc] initWithType:LoginButtonStyleGreen
+							  observer:[LoginButtonObserver new]];
 ```
 #### Проверка на возможность запуска приложения Сбербанк Онлайн
 
@@ -128,18 +128,29 @@ SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonSt
 <key>LSApplicationQueriesSchemes</key>
 <array>
     <string>sberbankidexternallogin</string>
-    <string>sbolidexternallogin</string>
+	<string>sbolidexternallogin</string>
 </array>
 ```
 
 ❗️Если у вас статическая сборка библиотеки, далее перейдите в раздел [настройки статической библиотеки](#Статика)
 
+# Предварительные действия
 
-# Добавление кнопки Войти по Сбер ID
+При старте вашего мобильного приложения необходмо инициализировать SDK:
 
-При старте вашего мобильного приложения необходмо передать значение вашего clientID. Данный ID будет использоваться 
-во всех процессах авторизации и работе методов SDK
+```swift
+import SberIdSDK
 
+func application(_ application: UIApplication,
+		 didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+	SIDManager.initSberID()
+  	...
+	return true
+}
+```
+
+До авторизации и создания кнопки обязательно установите clientID. Данный ID будет использоваться
+во всех процессах авторизации и работе методов SDK:
 ###### Swift
 
 ```swift
@@ -149,8 +160,10 @@ import SberIdSDK
 .
 .
 
-SBKAuthManager.setClientID("clientId")
+SIDManager.setClientID("clientId")
 ```
+
+# Добавление кнопки Войти по Сбер ID
 
 - Импортируйте модуль SberIdSDK.
 
@@ -179,16 +192,16 @@ init(type: LoginButtonStyle,
      textType: LoginButtonTextType,
      desiredSize: CGSize,
      observer: LoginButtonObserverProtocol? = nil) {}
-     
+
 /// Инициализатор создаст кнопку только по выбранному стилю
 /// - Parameters:
 ///   - type: стиль кнопки
 ///   - observer: наблюдатель состояния кнопки
 init(type: LoginButtonStyle,
      observer: LoginButtonObserverProtocol? = nil) {}
-     
+
 // Пример:
-let loginButton = SBKLoginButton(type: .white)
+let loginButton = SIDLoginButton(type: .white)
 loginButton.addTarget(self, action: #selector(loginButtonDidTap(_:)), for: .touchUpInside)
 view.addSubview(loginButton)
 ```
@@ -203,26 +216,26 @@ view.addSubview(loginButton)
 ///   textType: вариант текста
 ///   desiredSize: желаемые высота и ширина
 ///   observer: наблюдатель состояния кнопки
-- (nonnull instancetype)initWithType:(enum LoginButtonStyle) 
-                            textType:(enum LoginButtonTextType)
-                         desiredSize:(CGSize)
-                            observer:(id<LoginButtonObserverProtocol> _Nullable) {}
+- (nonnull instancetype)initWithType:(enum LoginButtonStyle)
+			    textType:(enum LoginButtonTextType)
+			 desiredSize:(CGSize)
+			    observer:(id<LoginButtonObserverProtocol> _Nullable) {}
 
 /// Инициализатор создаст кнопку только по выбранному стилю
 ///   type: стиль кнопки
 ///   observer: наблюдатель состояния кнопки
 - (nonnull instancetype)initWithType:(enum LoginButtonStyle)
-                            observer:(id<LoginButtonObserverProtocol> _Nullable) {}
+			    observer:(id<LoginButtonObserverProtocol> _Nullable) {}
 
 // Пример:
-SBKLoginButton *loginButton = [[SBKLoginButton alloc] initWithType:LoginButtonStyleGreen observer:nil];
+SIDLoginButton *loginButton = [[SIDLoginButton alloc] initWithType:LoginButtonStyleGreen observer:nil];
 [loginButton addTarget:self action:@selector(loginButtonDidTap:) forControlEvents:UIControlEventTouchUpInside];
 [self.view addSubview:loginButton];
 ```
 
 
 
-## Кастомизация кнопки <a name="Кастомизация"></a> 
+## Кастомизация кнопки <a name="Кастомизация"></a>
 
 Возможные вариации кнопки, а также рекомендуемые размеры можно найти в [гайдбуке по кнопке авторизации](https://www.figma.com/file/S7nPyGmpZFuk0oTOOAYQrQ/%5BBrand%5D-%D0%93%D0%B0%D0%B8%CC%86%D0%B4%D0%B1%D1%83%D0%BA-%D0%BF%D0%BE-%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B5-%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8?node-id=0%3A1)
 
@@ -258,7 +271,7 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 <img src="ReadMeImages/green.png" height="50">
 <img src="ReadMeImages/radius.png" height="118">
 
-Установить степень скругления кнопки можно с помощью метода кнопки ```setCornerRadius(_ radiusStyle: CornerRadiusStyle)```. При необходимости можно установить свои параметры через стандартный метод ```UIButton``` - ```SBKLoginButton().layer.cornerRadius```.
+Установить степень скругления кнопки можно с помощью метода кнопки ```setCornerRadius(_ radiusStyle: CornerRadiusStyle)```. При необходимости можно установить свои параметры через стандартный метод ```UIButton``` - ```SIDLoginButton().layer.cornerRadius```.
 
 <img src="ReadMeImages/corner.png" height="120">
 
@@ -280,7 +293,7 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 
 Установка/снятие статуса загрузки вручную не мешает работе процедуры персонализации кнопки, эти процессы не связаны друг с другом. Если на момент снятия вами статуса загрузки процедура персонализации еще не будет завершена, то анимация лого продолжится до ее завершения.
 
-За управление статусом загрузки отвечает свойство ```isLoaderHidden``` объекта кнопки Sber ID ```SBKLoginButton```
+За управление статусом загрузки отвечает свойство ```isLoaderHidden``` объекта кнопки Sber ID ```SIDLoginButton```
 
 ## Персонализация кнопки <a name="Персонализация"></a>
 
@@ -336,7 +349,7 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 
 # Запуск процесса авторизации по Сбер ID
 
-Для успешного запроса авторизации создайте и заполните объект ```SBKAuthRequest``` параметрами. Их описание можно найти в [1.1.2.1. Параметры запроса](https://api.developer.sber.ru/product/SberbankID/doc/v1/reqmobile). <a name="ПараметрыЗапроса"></a> 
+Для успешного запроса авторизации создайте и заполните объект ```SIDAuthRequest``` параметрами. Их описание можно найти в [1.1.2.1. Параметры запроса](https://api.developer.sber.ru/product/SberbankID/doc/v1/reqmobile). <a name="ПараметрыЗапроса"></a>
 
 Метод ```auth``` создадаст уникальную ссылку и для авторизации откроет мобильное приложение Сбербанк Онлайн (при наличии) либо веб окно. Для авторизации через метод ```soleLoginWebPageAuth``` перейдите в раздел [Авторизация через единый web-портал авторизации по Сбер ID](#web-портал)
 
@@ -345,7 +358,7 @@ LoginButtonTextType.pursue   // "Продолжить со Сбер ID"
 // Параметры для поддержки PKCE
 let verifier = SBKUtils.createVerifier()
 let challenge = SBKUtils.createChallenge(verifier)
- 
+
 let request = SBKAuthRequest()
 request.nonce = "your nonce"
 request.scope = "your scope" //Перечисление scope через пробел
@@ -353,13 +366,13 @@ request.state = "your state"
 request.redirectUri = "myapp://sberidauth"
 request.codeChallenge = challenge //Необязательный параметр
 request.codeChallengeMethod = SBKAuthRequest.challengeMethod //Необязательный параметр
-request.loginHint = "79998887766" // Необязательный параметр для передачи номера телефона пользователя, 
-				  // добавлен в версии 2.4.2 
+request.loginHint = "79998887766" // Необязательный параметр для передачи номера телефона пользователя,
+				  // добавлен в версии 2.4.2
 // Запуск авторизации
 let loginViewController = UIViewController()
-SBKAuthManager.auth(withSberId: request, loginViewController) // Авторизоваться с помощью Сбербанк Онлайн, 
-                                                              // если Сбербанк онлайн не установлен открывается
-                                                              // веб окно авторизации.
+SIDManager.auth(withSberId: request, loginViewController) // Авторизоваться с помощью Сбербанк Онлайн,
+							  // если Сбербанк онлайн не установлен открывается
+							  // веб окно авторизации.
 ```
 
 ###### Objective C
@@ -367,25 +380,25 @@ SBKAuthManager.auth(withSberId: request, loginViewController) // Авториз�
 // Параметры для поддержки PKCE
 NSString *verifier = [SBKUtils createVerifier];
 NSString *challenge = [SBKUtils createChallenge:verifier];
- 
-SBKAuthRequest *request = [SBKAuthRequest new];
+
+SIDAuthRequest *request = [SIDAuthRequest new];
 request.nonce = @"your nonce";
 request.scope = @"your scope"; //Перечисление scope через пробел
 request.state = @"your state";
 request.redirectUri = @"myapp://sberidauth";
 request.codeChallenge = challenge; //Необязательный параметр
-request.codeChallengeMethod = SBKAuthRequest.challengeMethod; //Необязательный параметр
-request.loginHint = @"79998887766"; // Необязательный параметр для передачи номера телефона пользователя, 
-				    // добавлен в версии 2.4.2 
+request.codeChallengeMethod = SIDAuthRequest.challengeMethod; //Необязательный параметр
+request.loginHint = @"79998887766"; // Необязательный параметр для передачи номера телефона пользователя,
+				    // добавлен в версии 2.4.2
 // Запуск авторизации
 UIViewController *loginViewController = [UIViewController new];
-[SBKAuthManager authWithSberId:request viewController:loginViewController]; // Авторизоваться с помощью Сбербанк Онлайн, 
-                                                                            // если Сбербанк онлайн не установлен открывается
-                                                                            // веб окно авторизации.
+[SIDManager authWithSberId:request viewController:loginViewController]; // Авторизоваться с помощью Сбербанк Онлайн,
+									// если Сбербанк онлайн не установлен открывается
+									// веб окно авторизации.
 ```
 *в версиях до 1.3.1 открывается внешний браузер Safari - на данный момент это запрещено Apple.
 
-*в версиях до 2.0.0, если вы использовали устаревшие методы запуска авторизации без ```viewController```, нужно установить свойство ```SBKAuthManager.navigationController```, чтобы открылся ```SafariViewController```, когда приложение Сбербанк Онлайн не может быть запущено (```UIApplication.shared.canOpenURL``` для Сбербанк Онлайн возвращает ```false```).
+*в версиях до 2.0.0, если вы использовали устаревшие методы запуска авторизации без ```viewController```, нужно установить свойство ```SIDManager.navigationController```, чтобы открылся ```SafariViewController```, когда приложение Сбербанк Онлайн не может быть запущено (```UIApplication.shared.canOpenURL``` для Сбербанк Онлайн возвращает ```false```).
 
 ### Шторка выбора мобильного приложения Сбербанка
 
@@ -395,8 +408,8 @@ UIViewController *loginViewController = [UIViewController new];
 
 ### Отправка события о старте авторизации с использованием альтернативных сервисов
 
-Для отправки метрики о событии использования альтернативных сервисов авторизации предусмотренно 2 статических метода метода класса ```SBKAuthManager```: 
-- с предусмотренным перечислением популярных сервисов; 
+Для отправки метрики о событии использования альтернативных сервисов авторизации предусмотренно 2 статических метода метода класса ```SIDManager```:
+- с предусмотренным перечислением популярных сервисов;
 - с возможностью указать название самостоятельно.
 
 ###### Swift
@@ -406,14 +419,14 @@ UIViewController *loginViewController = [UIViewController new];
 ///   - serviceName: название сервиса, который использовал пользователь
 ///   - isSuccess: флаг успешности входа
 ///   - userStatus: флаг, впервые ли пользователь регистрируется
-@objc public static func sendOtherAuth(serviceName: String, isSuccess: SBKTrinity, userStatus: SBKTrinity)
+@objc public static func sendOtherAuth(serviceName: String, isSuccess: SIDTrinity, userStatus: SIDTrinity)
 
 /// Передать метрики использования сервисов авторизации, отличных от Сбер ID
 /// - Parameters:
 ///   - service: сервис, который использовал пользователь
 ///   - isSuccess: флаг успешности входа
 ///   - isUserNew: флаг, впервые ли пользователь регистрируется
-@objc public static func sendOtherAuth(service: AuthServiceType, isSuccess: SBKTrinity, isUserNew: SBKTrinity)
+@objc public static func sendOtherAuth(service: AuthServiceType, isSuccess: SIDTrinity, isUserNew: SIDTrinity)
 
 ```
 
@@ -435,44 +448,44 @@ UIViewController *loginViewController = [UIViewController new];
 
 # Обработка ответа после авторизации
 
-После авторизации Сбербанк Онлайн перенаправит вас обратно в ваше приложение по адресу, указанному в параметре ```redirectUri``` объекта ```SBKAuthRequest```. Для того чтобы при переходе открылось ваше приложение, необходимо зарегистрировать deeplink(адрес) вашего приложения.
+После авторизации Сбербанк Онлайн перенаправит вас обратно в ваше приложение по адресу, указанному в параметре ```redirectUri``` объекта ```SIDAuthRequest```. Для того чтобы при переходе открылось ваше приложение, необходимо зарегистрировать deeplink(адрес) вашего приложения.
 
 Откройте параметры проекта и перейдите во вкладку *Info*. В нижней части добавьте свой *URL Type*.
 
 <img src="ReadMeImages/addDeeplink.png" width="800">
 
 
-Далее в файле *AppDelegate* прописываем свою логику (см. пример ниже), метод ```application``` вызывается при открытии вашего приложения по deeplink(ссылке). ```SBKAuthManager.getResponseFrom(_ url: URL, completion: (SBKAuthResponse) -> Void)``` вернет вам объект ```SBKAuthResponse``` с полученными параметрами. 
+Далее в файле *AppDelegate* прописываем свою логику (см. пример ниже), метод ```application``` вызывается при открытии вашего приложения по deeplink(ссылке). ```SIDManager.getResponseFrom(_ url: URL, completion: (SIDAuthResponse) -> Void)``` вернет вам объект ```SIDAuthResponse``` с полученными параметрами.
 
 ###### Swift
 
 ```swift
-func application(_ app: UIApplication, 
-		 open url: URL, 
-		 options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {     
-    if url.scheme == "myapp" && url.host == "sberidauth" {
-        SBKAuthManager.getResponseFrom(url) { response in
-	    //do something         
-        }
-    }
-    return true
+func application(_ app: UIApplication,
+		 open url: URL,
+		 options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+		if url.scheme == "myapp" && url.host == "sberidauth" {
+			SIDManager.getResponseFrom(url) { response in
+			//do something
+		}
+	}
+	return true
 }
 ```
 
 ###### Objective C
 
 ```objc
-- (BOOL)application:(UIApplication *)app 
-	    openURL:(NSURL *)url 
-	    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+- (BOOL)application:(UIApplication *)app
+		openURL:(NSURL *)url
+		options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    if ([url.scheme isEqualToString:@"myapp"] && [url.host isEqualToString:@"sberidauth"])
-    {
-        [SBKAuthManager getResponseFrom:url completion:^(SBKAuthResponse *response) {
-	    //do something
-        }];
-    }
-    return YES;
+	if ([url.scheme isEqualToString:@"myapp"] && [url.host isEqualToString:@"sberidauth"])
+	{
+		[SIDManager getResponseFrom:url completion:^(SIDAuthResponse *response) {
+		//do something
+		}];
+	}
+	return YES;
 }
 ```
 
@@ -481,28 +494,28 @@ func application(_ app: UIApplication,
 ###### Swift
 
 ```swift
-class SBKAuthResponse : NSObject {
+class SIDAuthResponse : NSObject {
 
-    /// Значение, сгенерированное внешней АС для предотвращения атак повторения
-    var nonce: String { get }
+	/// Значение, сгенерированное внешней АС для предотвращения атак повторения
+	var nonce: String { get }
 
-    /// Значение для предотвращения подделки межсайтовых запросов, случайно сгенерированное
-    var state: String? { get }
+	/// Значение для предотвращения подделки межсайтовых запросов, случайно сгенерированное
+	var state: String? { get }
 
-    /// Код авторизации клиента
-    var authCode: String? { get }
+	/// Код авторизации клиента
+	var authCode: String? { get }
 
-    /// Текст ошибки
-    var error: String? { get }
+	/// Текст ошибки
+	var error: String? { get }
 
-    /// Статус операции
-    var isSuccess: Bool { get }
+	/// Статус операции
+	var isSuccess: Bool { get }
 }
 ```
 ###### Objective C
 
 ```objc
-@interface SBKAuthResponse : NSObject
+@interface SIDAuthResponse : NSObject
 
 /// Значение, сгенерированное внешней АС для предотвращения атак повторения
 @property (nonatomic, readonly, copy) NSString * _Nonnull nonce;
@@ -525,7 +538,7 @@ class SBKAuthResponse : NSObject {
 @end
 ```
 
-## Ошибки <a name="Ошибки"></a> 
+## Ошибки <a name="Ошибки"></a>
 
 Если state сгенерированный вами и state возвращенный при авторизации по Сбер ID не совпадет, результат будет ошибочным, в SberIDResultModel.errorDescription вернется фраза "invalid_state". При других ошибках, таких как падение приложения Сбербанк Онлайн, прерывание сценария и др. будет ошибка "internal_error"
 
@@ -550,7 +563,7 @@ appScheme://redirect?status=fail&error=invalid_request
 
 Начиная с версии SDK 1.4.0 реализована поддержка бесшовной авторизации по Сбер ID. Бесшовная авторизация возможна при переходе из приложений СберБанка в ваше приложение и позволяет запустить авторизацию без показа кнопки и без нажатия на нее пользователем.
 
-В диплинке, который придет в ваше приложение, будет дополнительный параметр - базовый урл. Чтобы получить значение этого параметра, необходимо воспользоваться методом ```getSSOUrlStringFrom(_ url: URL?)``` класса ```SBKUtils```, передав в него пришедший диплинк. Полученное значение необходимо передать в свойство ```ssoBaseUrl``` при построении объекта ```SBKAuthRequest```.
+В диплинке, который придет в ваше приложение, будет дополнительный параметр - базовый урл. Чтобы получить значение этого параметра, необходимо воспользоваться методом ```getSSOUrlStringFrom(_ url: URL?)``` класса ```SIDUtils```, передав в него пришедший диплинк. Полученное значение необходимо передать в свойство ```ssoBaseUrl``` при построении объекта ```SIDAuthRequest```.
 
 
 ###### Для стандартной (не бесшовной) авторизации по Сбер ID с кнопкой, выполнять указанные в этом пункте действия не нужно.
@@ -559,24 +572,24 @@ appScheme://redirect?status=fail&error=invalid_request
 
 ```swift
 /// Получение параметра ssoBaseUrl
-let ssoBaseUrl = SBKUtils.getSSOUrlStringFrom(receivedUrl)
+let ssoBaseUrl = SIDUtils.getSSOUrlStringFrom(receivedUrl)
 
-/// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
-let request = SBKAuthRequest(scope: "scope",
+/// Присваивание параметра ssoBaseUrl свойству объекта SIDAuthRequest
+let request = SIDAuthRequest(scope: "scope",
                              state: "state",
                              nonce: "nonce",
-			     			 ssoBaseUrl: ssoBaseUrl,
-			     			 redirectUri: "https://testRedirect.url",
-			     			 codeChallenge: "challenge",
-			     			 codeChallengeMethod: SBKAuthRequest.challengeMethod)
+			     ssoBaseUrl: ssoBaseUrl,
+			     redirectUri: "https://testRedirect.url",
+			     codeChallenge: "challenge",
+			     codeChallengeMethod: SIDAuthRequest.challengeMethod)
 
 /// ИЛИ:
-let request = SBKAuthRequest()
+let request = SIDAuthRequest()
 /// заполнение запроса параметрами
 request.ssoBaseUrl = ssoBaseUrl
 
 /// Запуск авторизации
-SBKAuthManager.auth(withSberId: request)
+SIDManager.auth(withSberId: request)
 ```
 
 
@@ -584,24 +597,24 @@ SBKAuthManager.auth(withSberId: request)
 
 ```objc
 /// Получение параметра ssoBaseUrl
-NSString *ssoBaseUrl = [SBKUtils getSSOUrlStringFrom:receivedUrl];
+NSString *ssoBaseUrl = [SIDUtils getSSOUrlStringFrom:receivedUrl];
 
-/// Присваивание параметра ssoBaseUrl свойству объекта SBKAuthRequest
-SBKAuthRequest *request = [[SBKAuthRequest alloc] initWithScope:@"scope"
-														  state:@"state"
-														  nonce:@"nonce"
-													 ssoBaseUrl:ssoBaseUrl
-													redirectUri:@"https://testRedirect.url"
-												  codeChallenge:@"challenge"
-											codeChallengeMethod:SBKAuthRequest.challengeMethod];
-					       
+/// Присваивание параметра ssoBaseUrl свойству объекта SIDAuthRequest
+SIDAuthRequest *request = [[SIDAuthRequest alloc] initWithScope:@"scope"
+							  state:@"state"
+							  nonce:@"nonce"
+						     ssoBaseUrl:ssoBaseUrl
+					    redirectUri:@"https://testRedirect.url"
+						 codeChallenge:@"challenge"
+					   codeChallengeMethod:SIDAuthRequest.challengeMethod];
+
 /// ИЛИ:
-SBKAuthRequest *request = [SBKAuthRequest new];
+SIDAuthRequest *request = [SIDAuthRequest new];
 /// заполнение запроса параметрами
 request.ssoBaseUrl = ssoBaseUrl
 
 /// Запуск авторизации
-[SBKAuthManager authWithSberId:request];
+[SIDManager authWithSberId:request];
 ```
 
 Все остальные действия по подготовке диплинка и старте авторизации аналогичны описанным в разделе [Запуск процесса авторизации по Сбер ID](#Запуск).
@@ -612,15 +625,15 @@ request.ssoBaseUrl = ssoBaseUrl
 
 **Для этого:**
 - Необходимо направить запрос нам на [почту](support@ecom.sberbank.ru) для добавления ваших диплинков в список доверенных. В запросе указывается ```client_id``` и список диплинков, по которым будет производиться возврат в ваше мобильное приложение.
-- Создайте запрос ```SBKAuthRequest```, как при [обычном входе](#Запуск).
+- Создайте запрос ```SIDAuthRequest```, как при [обычном входе](#Запуск).
 - Запустите OIDC авторизацию через метод ```soleLoginWebPageAuth``` с дополнительным параметром ```svcRedirectUrlString```. Если запуск сценария невозможен, вернется false.
 
 ###### Swift
 ```swift
 let loginViewController = UIViewController()
-SBKAuthManager.soleLoginWebPageAuth(sberIdRequest: request,           
-                                    svcRedirectUrlString: "Ваш диплинк",
-                                    viewController: loginViewController) // Авторизация с помощью веб окна.
+SIDManager.soleLoginWebPageAuth(sberIdRequest: request,
+			 svcRedirectUrlString: "Ваш диплинк",
+			       viewController: loginViewController) // Авторизация с помощью веб окна.
 ```
 
 ###### Objective C
@@ -628,9 +641,9 @@ SBKAuthManager.soleLoginWebPageAuth(sberIdRequest: request,
 ```Objective-C
 // Запуск авторизации
 UIViewController *loginViewController = [UIViewController new];
-[SBKAuthManager soleLoginWebPageAuthWithSberIdRequest:request 
-                                 svcRedirectUrlString:@"Ваш диплинк" 
-                                       viewController:yourLoginViewController]; // Авторизация с помощью веб окна.
+[SIDManager soleLoginWebPageAuthWithSberIdRequest:request
+			     svcRedirectUrlString:@"Ваш диплинк"
+				   viewController:yourLoginViewController]; // Авторизация с помощью веб окна.
 ```
 
 
@@ -639,7 +652,7 @@ UIViewController *loginViewController = [UIViewController new];
 
 <img src="ReadMeImages/controllerVariousWays.png" height="400">
 
-Новый параметр ```svcRedirectUrlString``` используется для передачи «активности» в ваше приложение из ```SafariViewControllera```. После прохождения авторизации на портале и возврата в ваше приложение(по диплинку из ```svcRedirectUrlString```) процесс авторизации продолжит работу по стандартному сценарию OIDC. В ваше приложение вернется ```AuthCode``` и другие параметры через диплинк, переданный в ```SBKAuthRequest().redirectUri```. Вам необходимо закрыть ```SafariViewController``` самостоятельно. Дальнейшие шаги процесса авторизации описаны в разделе [Запуск процесса авторизации по Сбер ID](#Запуск)
+Новый параметр ```svcRedirectUrlString``` используется для передачи «активности» в ваше приложение из ```SafariViewControllera```. После прохождения авторизации на портале и возврата в ваше приложение(по диплинку из ```svcRedirectUrlString```) процесс авторизации продолжит работу по стандартному сценарию OIDC. В ваше приложение вернется ```AuthCode``` и другие параметры через диплинк, переданный в ```SIDAuthRequest().redirectUri```. Вам необходимо закрыть ```SafariViewController``` самостоятельно. Дальнейшие шаги процесса авторизации описаны в разделе [Запуск процесса авторизации по Сбер ID](#Запуск)
 
 # Тестироваие
 
@@ -647,6 +660,7 @@ UIViewController *loginViewController = [UIViewController new];
 
 Начиная с версии 2.4.0 для внутренних партнеров мы добавили возможность смены стендов на ИФТ и ПСИ. Для работы с переключением у вас должна быть настроена  интеграция с тестовыми стендами. Для добавления на стенд можно написать в чат поддержки Сбер ID (Ваш_продукт & Сбер ID) или на почту SberId@sber.ru
 
-Для настройки стенда нужно установить ```standType``` в ```SBKAuthRequest```
+Для настройки стенда нужно установить ```standType``` в ```SIDAuthRequest```
 
 Возможные варианты *enum*: ```prom```, ```ift```, ```psi```, ```iftCloud```, ```psiCloud```, ```custom```.
+
