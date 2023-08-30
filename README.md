@@ -653,7 +653,20 @@ UIViewController *loginViewController = [UIViewController new];
 
 <img src="ReadMeImages/controllerVariousWays.png" height="400">
 
-Новый параметр ```svcRedirectUrlString``` используется для передачи «активности» в ваше приложение из ```SafariViewControllera```. После прохождения авторизации на портале и возврата в ваше приложение(по диплинку из ```svcRedirectUrlString```) процесс авторизации продолжит работу по стандартному сценарию OIDC. В ваше приложение вернется ```AuthCode``` и другие параметры через диплинк, переданный в ```SIDAuthRequest().redirectUri```. Вам необходимо закрыть ```SafariViewController``` самостоятельно. Дальнейшие шаги процесса авторизации описаны в разделе [Запуск процесса авторизации по Сбер ID](#Запуск)
+Новый параметр ```svcRedirectUrlString``` используется для передачи «активности» в ваше приложение из ```SafariViewControllera```. После прохождения авторизации на портале и возврата в ваше приложение(по диплинку из ```svcRedirectUrlString```) процесс авторизации продолжит работу по стандартному сценарию OIDC. В ваше приложение вернется ```AuthCode``` и другие параметры через диплинк, переданный в ```SIDAuthRequest().redirectUri```. 
+
+Для того чтобы закрыть SfariViewController вам нужна ссылка на него, для этого подпишите передаваемый ViewController под протокол SIDSafariViewControllerDelegate, наследник SFSafariViewControllerDelegate:
+
+```swift
+class YourViewController: UIViewController, SIDSafariViewControllerDelegate {
+
+	var safariViewController: SFSafariViewController?
+ }
+```
+
+Это позволит не только получить ссылку на SafariViewController, но и следить за его состояниями.
+
+Дальнейшие шаги процесса авторизации описаны в разделе [Запуск процесса авторизации по Сбер ID](#Запуск)
 
 # Тестироваие
 
